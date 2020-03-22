@@ -14,6 +14,7 @@ import (
 )
 
 func main() {
+	//构建了一个TcpClient
 	client := TcpClient{}
 	fmt.Println("input AppId,UserId,DeviceId,SyncSequence")
 	fmt.Scanf("%d %d %d %d", &client.AppId, &client.UserId, &client.DeviceId, &client.Seq)
@@ -29,11 +30,11 @@ func Json(i interface{}) string {
 var codecFactory = tcp_conn.NewCodecFactory(2, 65536, 1024)
 
 type TcpClient struct {
-	AppId    int64
-	UserId   int64
-	DeviceId int64
-	Seq      int64
-	codec    *tcp_conn.Codec
+	AppId    int64 //应用ID
+	UserId   int64 //用户ID
+	DeviceId int64 //设备ID
+	Seq      int64 //序列号
+	codec    *tcp_conn.Codec //TODO
 }
 
 func (c *TcpClient) Output(pt pb.PackageType, requestId int64, message proto.Message) {
@@ -64,6 +65,7 @@ func (c *TcpClient) Output(pt pb.PackageType, requestId int64, message proto.Mes
 }
 
 func (c *TcpClient) Start() {
+	//TODO: 连接到服务器端，服务器是用的端口为8080
 	connect, err := net.Dial("tcp", "localhost:8080")
 	if err != nil {
 		fmt.Println(err)

@@ -1,3 +1,5 @@
+// 本文件中的内容主要负责处理TCP连接中的相关拆包和封包问题
+
 package tcp_conn
 
 import (
@@ -52,7 +54,7 @@ type Codec struct {
 	ReadBuf buffer // 读缓冲
 }
 
-// GetCodec 创建一个编解码器
+// GetCodec 创建一个编解码器，将连接和编解码整合到一起
 func (f *CodecFactory) GetCodec(conn net.Conn) *Codec {
 	return &Codec{
 		f:       f,
@@ -68,19 +70,20 @@ func (c *Codec) Read() (int, error) {
 
 // Decode 解码数据
 // Package 代表一个解码包
-// bool 标识是否还有可读数据
+// bool 标识是否还有可读数据 false 标示数据不够需要继续读
 func (c *Codec) Decode() ([]byte, bool, error) {
 	var err error
-	// 读取数据长度
+	// 读取数据长度，用两位进行标示
 	lenBuf, err := c.ReadBuf.seek(0, c.f.LenLen)
 	if err != nil {
 		return nil, false, nil
 	}
 
-	// 读取数据内容
+	//将数据长度转化为整形
 	valueLen := int(binary.BigEndian.Uint16(lenBuf))
 
-	// 数据的字节数组长度大于buffer的长度，返回错误
+	// 读取数据内容
+	// 数据的字节数组长度大于buffer的长度，返回错误（超长处理）
 	if valueLen > c.f.ReadContentMaxLen {
 		logger.Logger.Error(ErrIllegalValueLen.Error(), zap.Int("value_len", valueLen))
 		return nil, false, ErrIllegalValueLen

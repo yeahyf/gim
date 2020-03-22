@@ -8,7 +8,7 @@ import (
 
 func initDevConf() {
 	LogicConf = logicConf{
-		MySQL:                  "root:liu123456@tcp(localhost:3306)/gim?charset=utf8&parseTime=true",
+		MySQL:                  "root:123456@tcp(localhost:3306)/gim?charset=utf8&parseTime=true",
 		NSQIP:                  "127.0.0.1:4150",
 		RedisIP:                "127.0.0.1:6379",
 		RPCIntListenAddr:       ":50000",
@@ -16,6 +16,7 @@ func initDevConf() {
 		ServerRPCExtListenAddr: ":50002",
 		ConnRPCAddrs:           "addrs:///127.0.0.1:60000,127.0.0.1:60001",
 	}
+
 
 	ConnConf = connConf{
 		TCPListenAddr: ":8080",

@@ -22,7 +22,7 @@ func (*messageDao) Add(tableName string, message model.Message) error {
 	return nil
 }
 
-// ListBySeq 根据类型和id查询大于序号大于seq的消息
+// ListBySeq 根据类型和id查询序号大于seq的消息
 func (*messageDao) ListBySeq(tableName string, appId, objectType, objectId, seq int64) ([]model.Message, error) {
 	sql := fmt.Sprintf(`select app_id,object_type,object_id,request_id,sender_type,sender_id,sender_device_id,receiver_type,receiver_id,to_user_ids,type,content,seq,send_time from %s where app_id = ? and object_type = ? and object_id = ? and seq > ?`, tableName)
 	rows, err := db.DBCli.Query(sql, appId, objectType, objectId, seq)

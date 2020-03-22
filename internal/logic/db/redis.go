@@ -10,8 +10,9 @@ import (
 var RedisCli *redis.Client
 
 func InitDB() {
-	addr := config.LogicConf.RedisIP
+	addr := config.LogicConf.RedisIP //获取redis的ip地址
 
+	//获取redis的连接池
 	RedisCli = redis.NewClient(&redis.Options{
 		Addr: addr,
 		DB:   0,

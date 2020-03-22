@@ -6,10 +6,11 @@ import (
 	"go.uber.org/zap"
 )
 
+//TODO: 本地配置的相关信息
 func initLocalConf() {
 	LogicConf = logicConf{
-		MySQL:                  "root:liu123456@tcp(localhost:3306)/gim?charset=utf8&parseTime=true",
-		NSQIP:                  "127.0.0.1:4150",
+		MySQL:                  "root:123456@tcp(192.168.1.10:3306)/gim?charset=utf8&parseTime=true",
+		NSQIP:                  "127.0.0.1:4150", //目前未发现使用NSQ
 		RedisIP:                "127.0.0.1:6379",
 		RPCIntListenAddr:       ":50000",
 		ClientRPCExtListenAddr: ":50001",

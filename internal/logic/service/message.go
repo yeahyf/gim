@@ -25,6 +25,7 @@ func (*messageService) Add(ctx context.Context, message model.Message) error {
 }
 
 // ListByUserIdAndSeq 查询消息
+// 查询历史消息，并同步给用户
 func (*messageService) ListByUserIdAndSeq(ctx context.Context, appId, userId, seq int64) ([]model.Message, error) {
 	var err error
 	if seq == 0 {

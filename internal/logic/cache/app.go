@@ -20,11 +20,11 @@ var AppCache = new(appCache)
 
 // Get 获取设备缓存
 func (c *appCache) Get(appId int64) (*model.App, error) {
-	var app model.App
-	err := get(AppKey+strconv.FormatInt(appId, 10), &app)
-	if err != nil && err != redis.Nil {
-		return nil, gerrors.WrapError(err)
-	}
+		var app model.App
+		err := get(AppKey+strconv.FormatInt(appId, 10), &app)
+		if err != nil && err != redis.Nil {
+			return nil, gerrors.WrapError(err)
+		}
 
 	if err == redis.Nil {
 		return nil, nil
@@ -32,7 +32,7 @@ func (c *appCache) Get(appId int64) (*model.App, error) {
 	return &app, nil
 }
 
-// Set 设置app缓存
+// Set 设置app缓存 ，默认的有效期是一天
 func (c *appCache) Set(app *model.App) error {
 	err := set(AppKey+strconv.FormatInt(app.Id, 10), app, AppExpire)
 	if err != nil {

@@ -6,7 +6,7 @@ import (
 	"net"
 )
 
-// TCPServer TCP服务器
+// TCPServer TCP服务器 结构体，简单封装
 type TCPServer struct {
 	Address            string // 端口
 	AcceptGoroutineNum int    // 接收建立连接的goroutine数量
@@ -50,12 +50,14 @@ func (t *TCPServer) Accept(listener *net.TCPListener) {
 			continue
 		}
 
+		//设置为长链接
 		err = conn.SetKeepAlive(true)
 		if err != nil {
 			logger.Sugar.Error(err)
 		}
-
+		//此处用于统一处理封包和拆包问题
 		connContext := NewConnContext(conn)
+		//异步处理这个连接的请求
 		go connContext.DoConn()
 	}
 }

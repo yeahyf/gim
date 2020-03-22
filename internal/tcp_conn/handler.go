@@ -31,13 +31,13 @@ func (h *handler) Handler(ctx *ConnContext, bytes []byte) {
 
 	// 对未登录的用户进行拦截
 	if input.Type != pb.PackageType_PT_SIGN_IN && ctx.IsSignIn == false {
-		// 应该告诉用户没有登录
+		// 应该告诉用户没有登录,需要增加错误信息
 		ctx.Release()
 		return
 	}
 
 	switch input.Type {
-	case pb.PackageType_PT_SIGN_IN:
+	case pb.PackageType_PT_SIGN_IN: //登录请求处理中
 		h.SignIn(ctx, input)
 	case pb.PackageType_PT_SYNC:
 		h.Sync(ctx, input)
@@ -61,6 +61,7 @@ func (*handler) SignIn(ctx *ConnContext, input pb.Input) {
 		return
 	}
 
+	//进行消息转发到logic服务器
 	_, err = rpc_cli.LogicIntClient.SignIn(grpclib.ContextWithRequstId(context.TODO(), input.RequestId), &pb.SignInReq{
 		AppId:    signIn.AppId,
 		UserId:   signIn.UserId,
@@ -99,6 +100,7 @@ func (*handler) Sync(ctx *ConnContext, input pb.Input) {
 		return
 	}
 
+	//调用逻辑服务器的处理逻辑
 	resp, err := rpc_cli.LogicIntClient.Sync(grpclib.ContextWithRequstId(context.TODO(), input.RequestId), &pb.SyncReq{
 		AppId:    ctx.AppId,
 		UserId:   ctx.UserId,
@@ -106,10 +108,12 @@ func (*handler) Sync(ctx *ConnContext, input pb.Input) {
 		Seq:      sync.Seq,
 	})
 
+	//对响应包进行封装
 	var message proto.Message
 	if err == nil {
 		message = &pb.SyncOutput{Messages: resp.Messages}
 	}
+	//发出
 	ctx.Output(pb.PackageType_PT_SYNC, input.RequestId, err, message)
 }
 

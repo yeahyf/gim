@@ -11,8 +11,8 @@ import (
 )
 
 var (
-	LogicIntClient   pb.LogicIntClient
-	ConnectIntClient pb.ConnIntClient
+	LogicIntClient   pb.LogicIntClient  //逻辑服务器的客户端
+	ConnectIntClient pb.ConnIntClient   //TCP服务器的客户端
 )
 
 func InitLogicIntClient(addr string) {

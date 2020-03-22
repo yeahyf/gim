@@ -7,6 +7,8 @@ import (
 	"gim/pkg/pb"
 )
 
+// 将消息发送给需要接收的用户，这里需要获取到他的连接，连接放在一个map里边，
+// 通过DeviceId来进行索引
 func DeliverMessage(ctx context.Context, req *pb.DeliverMessageReq) error {
 	// 获取设备对应的TCP连接
 	conn := load(req.DeviceId)

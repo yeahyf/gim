@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	// 初始化数据库
+	// 初始化数据库（实际上是初始化了Redis）
 	db.InitDB()
 
 	// 初始化自增id配置
@@ -21,5 +21,6 @@ func main() {
 
 	logic.StartRpcServer()
 	logger.Logger.Info("logic server start")
+	//阻塞
 	select {}
 }

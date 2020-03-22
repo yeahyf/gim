@@ -28,6 +28,7 @@ const (
 	WriteContentMaxLen = 508 // 写缓存区内容最大长度
 )
 
+//全局变量
 var codecFactory = NewCodecFactory(LenLen, ReadContentMaxLen, WriteContentMaxLen)
 
 // ConnContext 连接上下文
@@ -57,7 +58,7 @@ func (c *ConnContext) DoConn() {
 	c.HandleConnect()
 
 	for {
-		err := c.Codec.Conn.SetReadDeadline(time.Now().Add(ReadDeadline))
+		err := c.Codec.Conn.SetReadDeadline(time.Now().Add(ReadDeadline)) //？？？
 		if err != nil {
 			c.HandleReadErr(err)
 			return
@@ -86,7 +87,7 @@ func (c *ConnContext) DoConn() {
 	}
 }
 
-// HandleConnect 建立连接
+// HandleConnect 建立连接，记录日志而已
 func (c *ConnContext) HandleConnect() {
 	logger.Logger.Info("tcp connect")
 }
@@ -96,7 +97,7 @@ func (c *ConnContext) HandlePackage(pack []byte) {
 	Handler.Handler(c, pack)
 }
 
-// Output
+// Output 统一向客户端发送消息接口
 func (c *ConnContext) Output(pt pb.PackageType, requestId int64, err error, message proto.Message) {
 	var output = pb.Output{
 		Type:      pt,
@@ -124,6 +125,7 @@ func (c *ConnContext) Output(pt pb.PackageType, requestId int64, err error, mess
 		return
 	}
 
+	//对数据编码并完成发送工作
 	err = c.Codec.Encode(outputBytes, WriteDeadline)
 	if err != nil {
 		logger.Sugar.Error(err)
